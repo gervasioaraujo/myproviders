@@ -56,7 +56,6 @@ class ListProducts extends Component {
                     style={styles.addNewProductButtom}
                 >
                     <Icon name='add' size={30} color='white' />
-                    {/* <Text style={styles.textButton}>NOVO PRODUTO</Text> */}
                 </TouchableOpacity>
             </View>
         );

@@ -39,7 +39,6 @@ export const createProduct = (payload) => {
 export const getProductsByProviderId = (providerId) => {
   try {
     const localRealm = getLocalRealm();
-    // const provider = Provider.getById(localRealm, providerId);
     const products = Product.getProductsByProviderId(localRealm, providerId);
     if (products) {
       return {

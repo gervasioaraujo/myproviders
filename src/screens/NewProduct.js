@@ -7,10 +7,6 @@ class NewProduct extends Component {
         title: 'Adicionar Produto'
     };
 
-    // componentDidMount() {
-    //     const { providerId } = this.props.navigation.state.params;
-    // }
-
     render() {
         const { provider } = this.props.navigation.state.params;
         return (

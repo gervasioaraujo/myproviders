@@ -33,10 +33,6 @@ class ProviderForm extends Component {
         }
     }
 
-    // componentWillUnmount(){
-
-    // }
-
     _saveProvider = () => {
         const { mode, id, name, cnpj, fone, address } = this.state;
         if (!name || !cnpj || !fone || !address) {

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert } fr
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 
-import { getProviderById, deleteProvider, cleanState } from '../store/actions/providers';
+import { deleteProvider, cleanState } from '../store/actions/providers';
 import FeedbackMessage from '../components/FeedbackMessage';
 
 class ViewProvider extends Component {

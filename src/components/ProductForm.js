@@ -77,18 +77,6 @@ class ProductForm extends Component {
                     value={price.toString()}
                     onChangeText={(text) => this.setState({ price: text })}
                 />
-                {/* <Text style={styles.label}>Telefone:</Text>
-                <TextInput
-                    style={styles.textInput}
-                    value={fone}
-                    onChangeText={(text) => this.setState({ fone: text })}
-                />
-                <Text style={styles.label}>Endereço:</Text>
-                <TextInput
-                    style={styles.textInput}
-                    value={address}
-                    onChangeText={(text) => this.setState({ address: text })}
-                /> */}
                 <TouchableOpacity
                     style={styles.buttonSave}
                     onPress={() => this._saveProduct()}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
 import { getProviders } from '../store/actions/providers';
@@ -44,7 +44,6 @@ class ListProviders extends Component {
                     style={styles.addNewProviderButtom}
                 >
                     <Icon name='add' size={30} color='white' />
-                    {/* <Text style={styles.textButton}>ADICIONAR</Text> */}
                 </TouchableOpacity>
             </View>
         );

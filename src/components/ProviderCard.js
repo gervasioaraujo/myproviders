@@ -12,7 +12,6 @@ class ProviderCard extends Component {
                 <View style={styles.appContainer}>
                     <Text style={styles.providerName}>{provider.name}</Text>
                     <Text style={styles.providerCNPJ}>CNPJ: {provider.cnpj}</Text>
-                    {/* <Text style={styles.providerCNPJ}>{provider.products.length} produtos</Text> */}
                 </View>
             </TouchableOpacity>
         );

@@ -13,16 +13,10 @@ import EditProduct from './screens/EditProduct';
 
 const MainNavigator = createStackNavigator({
     ListProviders: {
-        screen: ListProviders,
-        // navigationOptions: ({ navigation }) => ({
-        //     header: <CustomHeader navigation={navigation} />,
-        // })
+        screen: ListProviders
     },
     ViewProvider: {
-        screen: ViewProvider,
-        // navigationOptions: ({ navigation }) => ({
-        //     header: <CustomHeader navigation={navigation} />,
-        // })
+        screen: ViewProvider
     },
     ListProducts: {
         screen: ListProducts

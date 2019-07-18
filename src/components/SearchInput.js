@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {
     View,
-    Text,
     TextInput,
-    TouchableOpacity,
     StyleSheet
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -21,7 +19,6 @@ class SearchInput extends Component {
     }
 
     _onChangeSearchText = text => {
-        // console.warn(text);
         this.props._searchProvider(text);
     }
 
@@ -39,16 +36,9 @@ class SearchInput extends Component {
                     style={styles.searchText}
                     onChangeText={this._onChangeSearchText}
                     value={this.state.searchText}
-                    // autoFocus
                     placeholder='Buscar...'
                     onBlur={() => this.setState({ searchActive: false })}
                 />
-                {/* <TouchableOpacity
-                    onPress={() => this.setState({ searchActive: false })}
-                    style={styles.closeSearchButtom}
-                >
-                    <Icon name='close' size={15} color='black' />
-                </TouchableOpacity> */}
             </View>
         )
     }
@@ -70,13 +60,6 @@ const styles = StyleSheet.create({
         padding: 5
     }
 })
-
-// const mapStateToProps = ({ filtersReducer }) => {
-//     return {
-//         searchText: filtersReducer.searchText,
-//         comercialSegmentSelected: filtersReducer.comercialSegmentSelected
-//     }
-// }
 
 const mapDispatchToProps = (dispatch) => {
     return {

@@ -44,7 +44,6 @@ class ProductCard extends Component {
                         const { product, _deleteProduct, navigation } = this.props;
                         _deleteProduct(product.id);
                         Alert.alert('OK', "Registro excluído do banco!");
-                        // navigation.navigate('ListProducts');
                     }
                 },
             ],
