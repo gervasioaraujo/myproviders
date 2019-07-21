@@ -2,55 +2,65 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
-import { createProvider, updateProvider } from '../store/actions/providers';
+import { cleanProviderFormFeedbackMessage } from '../store/actions/providers';
+import {
+    changeProviderFormName,
+    changeProviderFormCNPJ,
+    changeProviderFormFone,
+    changeProviderFormAddress,
+    createProvider,
+    updateProvider
+} from '../store/actions/providers';
 import FeedbackMessage from '../components/FeedbackMessage';
 
 class ProviderForm extends Component {
 
-    static navigationOptions = {
-        title: 'Adicionar Fornecedor'
-    };
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            id: 0,
-            name: '',
-            cnpj: '',
-            fone: '',
-            address: '',
-            mode: null
-        }
+    componentDidMount() {
+        this.props._cleanProviderFormFeedbackMessage();
     }
 
-    componentDidMount() {
-        const { mode } = this.props;
-        if (mode === "create") {
-            this.setState({ mode });
-        } else if (mode === "update") {
-            const { id, name, cnpj, fone, address } = this.props.provider;
-            this.setState({ mode, id, name, cnpj, fone, address });
-        }
+    _onProviderNameChange = (name) => {
+        this.props._cleanProviderFormFeedbackMessage();
+        this.props._changeProviderFormName(name);
+    }
+
+    _onProviderCNPJChange = (cnpj) => {
+        this.props._cleanProviderFormFeedbackMessage();
+        this.props._changeProviderFormCNPJ(cnpj);
+    }
+
+    _onProviderFoneChange = (fone) => {
+        this.props._cleanProviderFormFeedbackMessage();
+        this.props._changeProviderFormFone(fone);
+    }
+
+    _onProviderAddressChange = (address) => {
+        this.props._cleanProviderFormFeedbackMessage();
+        this.props._changeProviderFormAddress(address);
     }
 
     _saveProvider = () => {
-        const { mode, id, name, cnpj, fone, address } = this.state;
+
+        const { id, name, cnpj, fone, address } = this.props;
+
         if (!name || !cnpj || !fone || !address) {
             Alert.alert('Atenção', 'Todos os campos são de preenchimento obrigatório!');
             return;
         }
-        const data = { id, name, cnpj, fone, address }
-        if (mode === "create") {
+
+        const data = { id, name, cnpj, fone, address };
+
+        if (!id) {
             this.props._createProvider(data);
-        } else if (mode === "update") {
+        } else {
             this.props._updateProvider(data);
         }
+
     }
 
     render() {
 
-        const { error, message } = this.props;
-        const { name, cnpj, fone, address, mode } = this.state;
+        const { name, cnpj, fone, address, error, message } = this.props;
 
         const feedbackMode = error ? "danger" : "success";
 
@@ -61,25 +71,26 @@ class ProviderForm extends Component {
                 <TextInput
                     style={styles.textInput}
                     value={name}
-                    onChangeText={(text) => this.setState({ name: text })}
+                    onChangeText={(text) => this._onProviderNameChange(text)}
                 />
                 <Text style={styles.label}>CNPJ:</Text>
                 <TextInput
                     style={styles.textInput}
                     value={cnpj}
-                    onChangeText={(text) => this.setState({ cnpj: text })}
+                    onChangeText={(text) => this._onProviderCNPJChange(text)}
                 />
                 <Text style={styles.label}>Telefone:</Text>
                 <TextInput
                     style={styles.textInput}
                     value={fone}
-                    onChangeText={(text) => this.setState({ fone: text })}
+                    onChangeText={(text) => this._onProviderFoneChange(text)}
                 />
                 <Text style={styles.label}>Endereço:</Text>
                 <TextInput
                     style={styles.textInput}
                     value={address}
-                    onChangeText={(text) => this.setState({ address: text })}
+                    onChangeText={(text) => this._onProviderAddressChange(text)}
+                // multiline
                 />
                 <TouchableOpacity
                     style={styles.buttonSave}
@@ -123,17 +134,20 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = ({ providersReducer }) => {
-    return {
-        error: providersReducer.error,
-        message: providersReducer.message
-    }
+const mapStateToProps = ({ providerFormReducer }) => {
+    const { name, cnpj, fone, address, error, message } = providerFormReducer;
+    return { name, cnpj, fone, address, error, message };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
+        _changeProviderFormName: (name) => dispatch(changeProviderFormName(name)),
+        _changeProviderFormCNPJ: (cnpj) => dispatch(changeProviderFormCNPJ(cnpj)),
+        _changeProviderFormFone: (fone) => dispatch(changeProviderFormFone(fone)),
+        _changeProviderFormAddress: (address) => dispatch(changeProviderFormAddress(address)),
         _createProvider: (data) => dispatch(createProvider(data)),
         _updateProvider: (data) => dispatch(updateProvider(data)),
+        _cleanProviderFormFeedbackMessage: () => dispatch(cleanProviderFormFeedbackMessage())
     }
 }
 

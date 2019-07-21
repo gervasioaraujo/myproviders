@@ -1,30 +1,90 @@
+import { Alert } from 'react-native';
 import {
+  CHANGE_PROVIDER_FORM_NAME,
+  CHANGE_PROVIDER_FORM_CNPJ,
+  CHANGE_PROVIDER_FORM_FONE,
+  CHANGE_PROVIDER_FORM_ADDRESS,
   CREATED_PROVIDER,
   ERROR_CREATE_PROVIDER,
-  GET_PROVIDER,
+  GET_PROVIDER_VIEW,
   ERROR_GET_PROVIDER,
   GET_PROVIDERS,
   ERROR_GET_PROVIDERS,
+  GET_PROVIDER_EDIT,
   UPDATED_PROVIDER,
   ERROR_UPDATE_PROVIDER,
   DELETED_PROVIDER,
   ERROR_DELETE_PROVIDER,
   CLEAN_PROVIDER_STATE,
+  CLEAN_PROVIDER_FORM,
+  CLEAN_PROVIDER_FORM_FEEDBACK_MESSAGE,
   SEARCHED_PROVIDER,
-  ERROR_SEARCHED_PROVIDER
+  ERROR_SEARCHED_PROVIDER,
 } from './actionTypes';
 import { getLocalRealm } from '../../db';
 import Provider from '../../db/models/Provider';
 
+// FUNCTIONS DISPATCHED BY PROVIDERFORM
+/**
+ * 
+ * @param {*} name 
+ */
+export const changeProviderFormName = (name) => {
+  return {
+    type: CHANGE_PROVIDER_FORM_NAME,
+    name
+  }
+}
+
+/**
+ * 
+ * @param {*} cnpj 
+ */
+export const changeProviderFormCNPJ = (cnpj) => {
+  return {
+    type: CHANGE_PROVIDER_FORM_CNPJ,
+    cnpj
+  }
+}
+
+/**
+ * 
+ * @param {*} fone 
+ */
+export const changeProviderFormFone = (fone) => {
+  return {
+    type: CHANGE_PROVIDER_FORM_FONE,
+    fone
+  }
+}
+
+/**
+ * 
+ * @param {*} address 
+ */
+export const changeProviderFormAddress = (address) => {
+  return {
+    type: CHANGE_PROVIDER_FORM_ADDRESS,
+    address
+  }
+}
+
+/**
+ * 
+ * @param {*} payload 
+ */
 export const createProvider = (payload) => {
   try {
     const localRealm = getLocalRealm();
     const createdProvider = Provider.create(localRealm, payload);
     if (createdProvider) {
+      // console.warn(createdProvider)
+      const { id, name, cnpj, fone, address } = createdProvider;
       return {
         type: CREATED_PROVIDER,
         successMsg: "Fornecedor adicionado ao banco!",
-        createdProvider
+        createdProvider: { id, name, cnpj, fone, address }
+        // createdProvider: Object.assign({}, { ...createdProvider })
       }
     } else {
       return {
@@ -40,14 +100,28 @@ export const createProvider = (payload) => {
   }
 }
 
-export const getProviderById = (providerId) => {
+export const getProviderById = (providerId, screen = "view") => {
   try {
     const localRealm = getLocalRealm();
     const provider = Provider.getById(localRealm, providerId);
     if (provider) {
-      return {
-        type: GET_PROVIDER,
-        provider
+      const { id, name, cnpj, fone, address } = provider;
+      switch (screen) {
+        case "view":
+          return {
+            type: GET_PROVIDER_VIEW,
+            provider: { id, name, cnpj, fone, address }
+          }
+        case "edit":
+          return {
+            type: GET_PROVIDER_EDIT,
+            provider: { id, name, cnpj, fone, address }
+          }
+        default:
+          return {
+            type: GET_PROVIDER_VIEW,
+            provider: { id, name, cnpj, fone, address }
+          }
       }
     } else {
       return {
@@ -64,31 +138,23 @@ export const getProviderById = (providerId) => {
 export const getProviders = () => {
   try {
     const localRealm = getLocalRealm();
-    const providers = Provider.getAll(localRealm);
-    if (providers) {
+    const providersDB = Provider.getAll(localRealm);
+    if (providersDB) {
       return {
         type: GET_PROVIDERS,
-        providers: providers.map(provider => {
-          return {
-            id: provider.id,
-            name: provider.name,
-            cnpj: provider.cnpj,
-            fone: provider.fone,
-            address: provider.address,
-            products: provider.products
-          }
+        providers: providersDB.map(provider => {
+          const { id, name, cnpj, fone, address } = provider;
+          return { id, name, cnpj, fone, address };
         })
       }
     } else {
       return {
-        type: ERROR_GET_PROVIDERS,
-        providers
+        type: ERROR_GET_PROVIDERS
       }
     }
   } catch (error) {
     return {
-      type: ERROR_GET_PROVIDERS,
-      providers
+      type: ERROR_GET_PROVIDERS
     }
   }
 }
@@ -98,11 +164,13 @@ export const updateProvider = (payload) => {
     const localRealm = getLocalRealm();
     const { id, name, cnpj, fone, address } = payload;
     const data = { name, cnpj, fone, address };
-    const updated = Provider.update(localRealm, data, id);
-    if (updated) {
+    const updatedProvider = Provider.update(localRealm, data, id);
+    if (updatedProvider) {
+      const { id, name, cnpj, fone, address } = updatedProvider;
       return {
         type: UPDATED_PROVIDER,
-        successMsg: "Dados do fornecedor atualizados!"
+        successMsg: "Dados do fornecedor atualizados!",
+        updatedProvider: { id, name, cnpj, fone, address }
       }
     }
     else {
@@ -123,10 +191,12 @@ export const updateProvider = (payload) => {
 export const deleteProvider = (providerId) => {
   try {
     const localRealm = getLocalRealm();
-    Provider.delete(localRealm, providerId);
+    Provider.delete(localRealm, providerId); // !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    Alert.alert('OK', "Fornecedor excluído do banco!");
     return {
       type: DELETED_PROVIDER,
-      successMsg: "Fornecedor excluído do banco!"
+      deletedProviderId: providerId
     }
   } catch (error) {
     return {
@@ -134,12 +204,23 @@ export const deleteProvider = (providerId) => {
       errorMsg: error
     }
   }
-
 }
 
 export const cleanState = () => {
   return {
     type: CLEAN_PROVIDER_STATE
+  }
+}
+
+export const cleanProviderForm = () => {
+  return {
+    type: CLEAN_PROVIDER_FORM
+  }
+}
+
+export const cleanProviderFormFeedbackMessage = () => {
+  return {
+    type: CLEAN_PROVIDER_FORM_FEEDBACK_MESSAGE
   }
 }
 

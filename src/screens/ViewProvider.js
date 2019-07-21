@@ -3,8 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ActivityIndicator, Alert } fr
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 
-import { deleteProvider, cleanState } from '../store/actions/providers';
-import FeedbackMessage from '../components/FeedbackMessage';
+import { getProviderById, deleteProvider, cleanState } from '../store/actions/providers';
 
 class ViewProvider extends Component {
 
@@ -12,27 +11,15 @@ class ViewProvider extends Component {
         title: 'Detalhes do Fornecedor',
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            provider: null
-        }
-    }
-
-    didFocus = this.props.navigation.addListener('didFocus', () => {
-        this.props._cleanState();
-    });
-
     componentDidMount() {
-        this.props._cleanState();
-        const { provider } = this.props.navigation.state.params;
-        this.setState({ provider });
+        const { providerId } = this.props.navigation.state.params;
+        this.props._getProviderById(providerId)
     }
 
     _editProviderButtom = () => {
-        const { navigation } = this.props;
-        const { provider } = this.state;
-        navigation.navigate('EditProvider', { provider });
+        const { navigation, provider } = this.props;
+        const providerId = provider.id;
+        navigation.navigate('EditProvider', { providerId });
     }
 
     _deleteProviderButtom = () => {
@@ -43,9 +30,11 @@ class ViewProvider extends Component {
                 { text: 'Cancelar', onPress: () => null },
                 {
                     text: 'Confirmar', onPress: () => {
-                        const { provider } = this.state;
-                        this.props._deleteProvider(provider.id);
-                        Alert.alert('OK', "Registro excluído do banco!");
+                        const { id } = this.props.provider;
+                        this.props._deleteProvider(id);
+
+                        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        // Alert.alert('OK', "Registro excluído do banco!");
                         const { navigation } = this.props;
                         navigation.navigate('ListProviders');
                     }
@@ -57,22 +46,25 @@ class ViewProvider extends Component {
 
     render() {
 
-        const { error, message } = this.props;
-        const { provider } = this.state;
-
-        const feedbackMode = error ? "danger" : "success";
+        const { provider } = this.props;
 
         if (!provider) {
-            return <ActivityIndicator />
-        } else {
             return (
                 <View style={styles.container}>
-                    {message !== "" && <FeedbackMessage mode={feedbackMode} message={message} />}
-                    <Text style={styles.providerName}>{provider.name}</Text>
+                    <ActivityIndicator size={30} />
+                </View>
+            )
+        } else {
+
+            const { id, name, cnpj, fone, address } = provider;
+
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.providerName}>{name}</Text>
                     <View style={styles.containerData}>
-                        <Text style={styles.cnpj}>CNPJ: {provider.cnpj}</Text>
-                        <Text style={styles.cnpj}>Telefone: {provider.fone}</Text>
-                        <Text style={styles.cnpj}>Endereço: {provider.address}</Text>
+                        <Text style={styles.cnpj}>CNPJ: {cnpj}</Text>
+                        <Text style={styles.cnpj}>Telefone: {fone}</Text>
+                        <Text style={styles.cnpj}>Endereço: {address}</Text>
                     </View>
                     <View style={styles.buttonsContainer}>
                         <TouchableOpacity
@@ -89,13 +81,14 @@ class ViewProvider extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.buttonViewProducts}
-                            onPress={() => this.props.navigation.navigate("ListProducts", { provider })}
+                            onPress={() => this.props.navigation.navigate("ListProducts", { providerId: id, providerName: name })}
                         >
                             <Icon name='list' size={30} color='white' />
                         </TouchableOpacity>
                     </View>
                 </View>
             );
+
         }
     }
 
@@ -159,14 +152,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({ providersReducer }) => {
     return {
-        provider: providersReducer.provider,
-        error: providersReducer.error,
-        message: providersReducer.message
+        provider: providersReducer.selectedProvider
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
+        _getProviderById: (providerId) => dispatch(getProviderById(providerId)),
         _cleanState: () => dispatch(cleanState()),
         _deleteProvider: (id) => dispatch(deleteProvider(id)),
     }

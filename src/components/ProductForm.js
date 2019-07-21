@@ -23,13 +23,13 @@ class ProductForm extends Component {
     }
 
     componentDidMount() {
-        const { mode, provider } = this.props;
-        if (mode === "create") {
-            this.setState({ mode, provider });
-        } else if (mode === "update") {
-            const { id, name, price } = this.props.product;
-            this.setState({ mode, provider, id, name, price });
-        }
+        // const { mode, provider } = this.props;
+        // if (mode === "create") {
+        //     // this.setState({ mode, provider });
+        // } else if (mode === "update") {
+        //     const { id, name, price } = this.props.product;
+        //     this.setState({ mode, provider, id, name, price });
+        // }
     }
 
     _saveProduct = () => {
@@ -53,8 +53,8 @@ class ProductForm extends Component {
 
     render() {
 
-        const { error, message } = this.props;
-        const { provider, name, price } = this.state;
+        const { providerName, error, message } = this.props;
+        const { name, price } = this.state;
 
         const feedbackMode = error ? "danger" : "success";
 
@@ -62,13 +62,13 @@ class ProductForm extends Component {
             <View style={styles.container}>
                 {message !== "" && <FeedbackMessage mode={feedbackMode} message={message} />}
                 <Text style={styles.label}>
-                    Fornecedor: <Text style={styles.providerName}>{provider ? provider.name : ''}</Text>
+                    Fornecedor: <Text style={styles.providerName}>{providerName}</Text>
                 </Text>
                 <Text style={styles.label}>Nome:</Text>
                 <TextInput
                     style={styles.textInput}
                     value={name}
-                    onChangeText={(text) => this.setState({ name: text })}
+                    // onChangeText={(text) => this.setState({ name: text })}
                 />
                 <Text style={styles.label}>Preço de custo:</Text>
                 <TextInput

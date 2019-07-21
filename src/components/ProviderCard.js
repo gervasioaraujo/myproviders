@@ -6,12 +6,14 @@ class ProviderCard extends Component {
     render() {
 
         const { provider, navigation } = this.props;
+        const { id, name, cnpj } = provider;
+        const providerId = id;
 
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('ViewProvider', { provider })}>
+            <TouchableOpacity onPress={() => navigation.navigate('ViewProvider', { providerId })}>
                 <View style={styles.appContainer}>
-                    <Text style={styles.providerName}>{provider.name}</Text>
-                    <Text style={styles.providerCNPJ}>CNPJ: {provider.cnpj}</Text>
+                    <Text style={styles.providerName}>{name}</Text>
+                    <Text style={styles.providerCNPJ}>CNPJ: {cnpj}</Text>
                 </View>
             </TouchableOpacity>
         );

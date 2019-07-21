@@ -39,11 +39,14 @@ export const createProduct = (payload) => {
 export const getProductsByProviderId = (providerId) => {
   try {
     const localRealm = getLocalRealm();
-    const products = Product.getProductsByProviderId(localRealm, providerId);
-    if (products) {
+    const productsDB = Product.getProductsByProviderId(localRealm, providerId);
+    if (productsDB) {
       return {
         type: GET_PROVIDER_PRODUCTS,
-        products
+        products: productsDB.map(product => {
+          const { id, name, price } = product;
+          return { id, name, price };
+        })
       }
     } else {
       return {

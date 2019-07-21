@@ -10,9 +10,9 @@ import SearchInput from '../components/SearchInput';
 
 class ListProviders extends Component {
 
-    didFocus = this.props.navigation.addListener('didFocus', () => {
-        this.props._getProviders();
-    });
+    // didFocus = this.props.navigation.addListener('didFocus', () => {
+    //     this.props._getProviders();
+    // });
 
     _addNewProviderButtom = () => {
         const { navigation } = this.props;
@@ -26,6 +26,9 @@ class ListProviders extends Component {
     render() {
 
         const { navigation, providers } = this.props;
+
+        // console.warn(providers);
+
         return (
             <View style={styles.listContainer}>
                 <SearchInput />

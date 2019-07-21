@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ProviderForm from '../components/ProviderForm';
 import { connect } from 'react-redux';
 
-import { cleanState } from '../store/actions/providers';
+import { getProviderById, cleanProviderForm } from '../store/actions/providers';
 
 class EditProvider extends Component {
 
@@ -11,28 +11,42 @@ class EditProvider extends Component {
     };
 
     componentDidMount() {
-        this.props._cleanState();
+        const { providerId } = this.props.navigation.state.params;
+        this.props._getProviderById(providerId, "edit");
     }
 
     componentWillUnmount() {
-        this.props._cleanState();
+        this.props._cleanProviderForm();
     }
 
     render() {
 
-        const { provider } = this.props.navigation.state.params;
+        const { name, cnpj, fone, address, navigation } = this.props;
+        const { providerId } = navigation.state.params;
 
         return (
-            <ProviderForm mode="update" provider={provider} />
+            <ProviderForm
+                id={providerId}
+                name={name}
+                cnpj={cnpj}
+                fone={fone}
+                address={address}
+            />
         );
     }
 
 }
 
+const mapStateToProps = ({ providerFormReducer }) => {
+    const { name, cnpj, fone, address } = providerFormReducer;
+    return { name, cnpj, fone, address };
+}
+
 const mapDispatchToProps = dispatch => {
     return {
-        _cleanState: () => dispatch(cleanState())
+        _getProviderById: (providerId, screen) => dispatch(getProviderById(providerId, screen)),
+        _cleanProviderForm: () => dispatch(cleanProviderForm())
     }
 }
 
-export default connect(null, mapDispatchToProps)(EditProvider);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProvider);

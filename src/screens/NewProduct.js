@@ -8,10 +8,16 @@ class NewProduct extends Component {
     };
 
     render() {
-        const { provider } = this.props.navigation.state.params;
+
+        const { providerId, providerName } = this.props.navigation.state.params;
+
         return (
-            <ProductForm mode="create" provider={provider} />
+            <ProductForm
+                providerId={providerId}
+                providerName={providerName}
+            />
         );
+
     }
 
 }

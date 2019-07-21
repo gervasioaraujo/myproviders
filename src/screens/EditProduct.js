@@ -11,14 +11,20 @@ class EditProduct extends Component {
     };
 
     componentDidMount() {
-        this.props._cleanState();
+        // this.props._cleanState();
     }
 
     render() {
-        const { provider, product } = this.props.navigation.state.params;
+        
+        const { providerName, product } = this.props.navigation.state.params;
+
         return (
-            <ProductForm mode="update" provider={provider} product={product} />
+            <ProductForm
+                providerName={providerName}
+                product={product}
+            />
         );
+
     }
 
 }

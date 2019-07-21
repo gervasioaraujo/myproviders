@@ -10,34 +10,27 @@ import FeedbackMessage from '../components/FeedbackMessage';
 class ListProducts extends Component {
 
     static navigationOptions = ({ navigation }) => {
-
         const { params } = navigation.state;
-
         return {
-            title: `${params.provider.name} - Produtos`,
+            title: `${params.providerName} - Produtos`,
         };
     };
 
-    didFocus = this.props.navigation.addListener('didFocus', () => {
-        const { id } = this.props.navigation.state.params.provider;
-        this.props._getProductsByProviderId(id);
-    });
-
     componentDidMount() {
-        const { id } = this.props.navigation.state.params.provider;
-        this.props._getProductsByProviderId(id);
+        const { providerId } = this.props.navigation.state.params;
+        this.props._getProductsByProviderId(providerId);
     }
 
     _addNewProductButtom = () => {
         const { navigation } = this.props;
-        const { provider } = navigation.state.params;
-        navigation.navigate('NewProduct', { provider });
+        const { providerId, providerName } = navigation.state.params;
+        navigation.navigate('NewProduct', { providerId, providerName });
     }
 
     render() {
 
         const { navigation, products } = this.props;
-        const { provider } = navigation.state.params;
+        const { providerName } = navigation.state.params;
 
         return (
             <View style={styles.listContainer}>
@@ -47,7 +40,7 @@ class ListProducts extends Component {
                     <FlatList
                         contentContainerStyle={styles.productsFlatList}
                         data={products}
-                        renderItem={({ item }) => <ProductCard product={item} provider={provider} navigation={navigation} />}
+                        renderItem={({ item }) => <ProductCard product={item} providerName={providerName} navigation={navigation} />}
                         keyExtractor={(item, index) => index.toString()}
                     />
                 }

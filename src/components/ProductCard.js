@@ -29,8 +29,9 @@ class ProductCard extends Component {
     }
 
     _editProductButtom = () => {
-        const { product, provider, navigation } = this.props;
-        navigation.navigate('EditProduct', { product, provider });
+        const { product, navigation } = this.props;
+        const { providerName } = navigation.state.params;
+        navigation.navigate('EditProduct', { product, providerName });
     }
 
     _deleteProductButtom = () => {
